@@ -1,0 +1,2 @@
+由flume将日志信息记录到hdfs中，相关配置文件记录在此package下
+
