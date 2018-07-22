@@ -45,8 +45,8 @@ public class TestHdfs {
     @Test
     public void upload() throws IOException {
         //文件上传
-        FileInputStream is = new FileInputStream(new File("path"));
-        Path p = new Path("/data/test.txt");
+        FileInputStream is = new FileInputStream(new File("D:\\BJSXT-BIGDATA\\hadoop-day02.pptx"));
+        Path p = new Path("/data/test");
         FSDataOutputStream stream = fs.create(p);
         IOUtils.copyBytes(is, stream, conf, true);
     }
@@ -54,15 +54,20 @@ public class TestHdfs {
     @Test
     public void download() throws IOException{
         //文件下载
-        FileOutputStream fo = new FileOutputStream(new File("D:/bigdata/data/test.txt"));
-        Path p = new Path("/data/test.txt");
+        File file = new File("D:/test/data/test.pptx");
+        if (!file.exists()){
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+        }
+        FileOutputStream fo = new FileOutputStream(file);
+        Path p = new Path("/data/test");
         FSDataInputStream stream = fs.open(p);
         IOUtils.copyBytes(stream,fo,conf);
     }
 
     @Test
     public void getBLKInfos() throws IOException {
-        Path p = new Path("/data/test.txt");
+        Path p = new Path("/data/test");
         System.out.println(fs.getDefaultBlockSize(p));
         System.out.println(fs.getDefaultReplication(p));
         FileStatus f = fs.getFileStatus(p);
@@ -72,7 +77,9 @@ public class TestHdfs {
             //块的偏移量，块的大小  块的位置信息
             //块的位置信息、计算向数据移动
             //并行度越高，计算速度越快
-            System.out.println(b);
+            System.out.print("==================");
+            System.out.print(b);
+            System.out.print("==================");
         }
         //seek()---从哪开始读
     }
