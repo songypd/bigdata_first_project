@@ -22,7 +22,16 @@ splits 最小值默认是1  最大值是long.maxValue(),
 
 mapTask.class reduceTask.class
 
+new LineRecordReader() 最终map是靠行读取器去读取数据的，以一行为单位，map输入最重要的部分是初始化（分布式文件系统-hdfs、输入格式化）
+input.initialize()
+LineRecordReader!!!
 
+map的输入的过程v
+获得流-文件流的重构-切片的重构-输入格式化-创建input（默认TextInputFormat）-lineRecordReader-in.readLine()初始化环节-调起run方法-nextKeyValue()-
+
+如果reduce的数量为零-就不执行排序
+不为零，执行排序
+每个切片向后多读一行，向前少读一行
 
 
 
