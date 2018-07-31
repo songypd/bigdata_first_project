@@ -41,7 +41,7 @@ public class TQmain {
         job.setMapperClass(TQMapper.class);
         job.setMapOutputKeyClass(TQmodel.class);
         job.setMapOutputValueClass(IntWritable.class);
-
+        //mapoutputformat  map的缓存
         //排序比较器
         job.setSortComparatorClass(SortCompare.class);
         //combiner
@@ -54,5 +54,6 @@ public class TQmain {
         job.setReducerClass(ReduceTask.class);
         //reduce的数量= 分区的个数
         job.setNumReduceTasks(2);
+        job.waitForCompletion(true);
     }
 }
