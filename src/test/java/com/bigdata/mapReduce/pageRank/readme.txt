@@ -9,3 +9,9 @@ pageRank实现了将链接价值概念作为排名的因素
 
 投票
 加和
+
+
+MR的运行方式
+    单机  mapreduce.framework.name   local
+    集群--客户端将计算程序提交
+
