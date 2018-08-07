@@ -6,6 +6,7 @@ import java.util.concurrent.CyclicBarrier;
  * @author yuanpeng.song
  * @project first
  * @create 14:08 2018/8/1
+ * 控制线程等待，直到倒计时器归0再继续执行
  */
 public class CyclicBarrie_001 {
     public static void main(String[] args) {

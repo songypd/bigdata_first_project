@@ -6,6 +6,7 @@ import java.io.IOException;
  * @author yuanpeng.song
  * @project first
  * @create 11:57 2018/8/1
+ * 守护线程  daemon
  */
 public class GuardThread {
 

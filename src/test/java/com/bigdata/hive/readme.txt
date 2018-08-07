@@ -34,9 +34,8 @@ protected boolean done; // 初始化值为false
 搭建mysql存储元数据
         安装mysql
         Yum install mysql-server -y
-
         修改mysql权限：
-        GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '123' WITH GRANT OPTION;
+        GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'root1234' WITH GRANT OPTION;
         flush privileges;
         删除多余会对权限造成影响的数据
         刷新权限
@@ -45,4 +44,49 @@ protected boolean done; // 初始化值为false
 mysql驱动包
 修改配置文件
 修改jline这个包
+
+
+Hive_Sql
+
+Hive的数据类型
+: primitive_type
+  | array_type   同一种类型的数组
+  | map_type     K-V
+  | struct_type   类的属性
+：primitive_type
+  |TINYINT
+  | SMALLINT
+  | INT
+  | BIGINT
+  | BOOLEAN
+  | FLOAT
+  | DOUBLE
+  | STRING
+
+Loading files into tables
+
+    LOAD DATA [LOCAL] INPATH 'filepath' [OVERWRITE] INTO TABLE tablename [PARTITION (partcol1=val1, partcol2=val2 ...)]
+
+    LOAD DATA [LOCAL] INPATH 'filepath' [OVERWRITE] INTO TABLE tablename [PARTITION (partcol1=val1, partcol2=val2 ...)] [INPUTFORMAT 'inputformat' SERDE 'serde'] (3.0 or later)
+
+读时检查、写时检查
+
+内部表
+    CREATE  TABLE [IF NOT EXISTS] table_name
+    删除表时，元数据与数据都会被删除
+外部表
+    CREATE EXTERNAL TABLE [IF NOT EXISTS] table_name LOCATION hdfs_path
+    删除外部表只删除metastore的元数据，不删除hdfs中的表数据
+
+
+
+
+
+
+
+
+
+
+
+
 

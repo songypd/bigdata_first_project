@@ -4,6 +4,7 @@ package com.java.thread;
  * @author yuanpeng.song
  * @project first
  * @create 10:49 2018/8/1
+ * 多线程的可见性s
  */
 public class Volatile {
     private static volatile boolean isstop= false;
