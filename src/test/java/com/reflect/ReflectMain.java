@@ -14,10 +14,22 @@ public class ReflectMain {
     public void mainTest() throws Exception{
         String a = "i love ";
         Object[] arr = {a};
-        Class clazz = Class.forName("com.reflect.ReflectTest");
+        Class clazz = Class.forName("com.reflect.ReflectTest001");
         clazz.getMethod("test_001",String.class).invoke(clazz.newInstance(),a);
 //        Method m = clazz.getMethod("test_001",String.class).invoke(arr);
 //        System.out.println(m.invoke(arr));
 
     }
+}
+
+class ReflectTest001 {
+
+
+    public void test_001(String append) {
+        String name = "money";
+        System.out.println(append+name);
+
+    }
+
+
 }
