@@ -26,7 +26,7 @@ public class TQmain {
         Job job = Job.getInstance(conf);
         //运行的class
         job.setJarByClass(TQmain.class);
-        //输入 输出
+        //输入 x`
         Path p1 = new Path("");
         Path p2 = new Path("");
         FileInputFormat.addInputPath(job,p1);
