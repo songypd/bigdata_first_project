@@ -1,2 +1,2 @@
 # bigdata_first_project
-第一个大数据相关项目
+日志分析系统+一部分基础知识

@@ -28,6 +28,7 @@ public class WCcount {
         }
         FileOutputFormat.setOutputPath(job, out);
         job.setMapperClass(MyWordMapper.class);
+        job.setCombinerClass(MyWordReduce.class);
         job.setNumReduceTasks(1);
         job.setMapOutputValueClass(IntWritable.class);
         job.setReducerClass(MyWordReduce.class);
