@@ -1,0 +1,24 @@
+Example for topic subscription by comma-separated topic list.
+
+tier1.sources.source1.type = org.apache.flume.source.kafka.KafkaSource
+tier1.sources.source1.channels = channel1
+tier1.sources.source1.batchSize = 5000
+tier1.sources.source1.batchDurationMillis = 2000
+tier1.sources.source1.kafka.bootstrap.servers = localhost:9092
+tier1.sources.source1.kafka.topics = test1, test2
+tier1.sources.source1.kafka.consumer.group.id = custom.g.id
+
+
+
+Example for topic subscription by regex
+
+tier1.sources.source1.type = org.apache.flume.source.kafka.KafkaSource
+tier1.sources.source1.channels = channel1
+tier1.sources.source1.kafka.bootstrap.servers = localhost:9092
+tier1.sources.source1.kafka.topics.regex = ^topic[0-9]$
+# the default kafka.consumer.group.id=flume is used
+
+
+
+
+

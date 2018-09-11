@@ -1,0 +1,93 @@
+The following are the escape sequences supported:
+Alias 	Description
+%{host} 	Substitute value of event header named “host”. Arbitrary header names are supported.
+%t 	Unix time in milliseconds
+%a 	locale’s short weekday name (Mon, Tue, ...)
+%A 	locale’s full weekday name (Monday, Tuesday, ...)
+%b 	locale’s short month name (Jan, Feb, ...)
+%B 	locale’s long month name (January, February, ...)
+%c 	locale’s date and time (Thu Mar 3 23:05:25 2005)
+%d 	day of month (01)
+%e 	day of month without padding (1)
+%D 	date; same as %m/%d/%y
+%H 	hour (00..23)
+%I 	hour (01..12)
+%j 	day of year (001..366)
+%k 	hour ( 0..23)
+%m 	month (01..12)
+%n 	month without padding (1..12)
+%M 	minute (00..59)
+%p 	locale’s equivalent of am or pm
+%s 	seconds since 1970-01-01 00:00:00 UTC
+%S 	second (00..59)
+%y 	last two digits of year (00..99)
+%Y 	year (2010)
+%z 	+hhmm numeric timezone (for example, -0400)
+%[localhost] 	Substitute the hostname of the host where the agent is running
+%[IP] 	Substitute the IP address of the host where the agent is running
+%[FQDN] 	Substitute the canonical hostname of the host where the agent is running
+
+Note: The escape strings %[localhost], %[IP] and %[FQDN] all rely on Java’s ability to obtain the hostname, which may fail in some networking environments.
+
+
+
+The file in use will have the name mangled to include ”.tmp” at the end. Once the file is closed, this extension is removed. This allows excluding partially complete files in the directory. Required properties are in bold.
+
+Note
+
+For all of the time related escape sequences, a header with the key “timestamp” must exist among the headers of the event (unless hdfs.useLocalTimeStamp is set to true). One way to add this automatically is to use the TimestampInterceptor.
+Name 	Default 	Description
+channel 	–           链接操作
+type 	– 	The component type name, needs to be        hdfs        类型
+hdfs.path 	– 	HDFS directory path (eg hdfs://namenode/flume/webdata/) 集群名称/目录路径
+
+文件的名称属性
+hdfs.filePrefix 	FlumeData 	Name prefixed to files created by Flume in hdfs directory  -》文件的文件名称前缀
+hdfs.fileSuffix 	– 	Suffix to append to file (eg .avro - NOTE: period is not automatically added) -》文件的文件名称后缀
+hdfs.inUsePrefix 	– 	Prefix that is used for temporal files that flume actively writes into      -》临时文件的文件名称前缀
+hdfs.inUseSuffix 	.tmp 	Suffix that is used for temporal files that flume actively writes into  -》临时文件的文件名称后缀
+
+滚动当前文件-》控制生成多少个文件
+hdfs.rollInterval 	30 	Number of seconds to wait before rolling current file (0 = never roll based on time interval) -》控制文件开启的时间
+hdfs.rollSize 	1024 	File size to trigger roll, in bytes (0: never roll based on file size)  -》控制文件大小
+hdfs.rollCount 	10 	Number of events written to file before it rolled (0 = never roll based on number of events) -》每次写入多少条数据，会重新生成文件
+
+hdfs.idleTimeout 	n 	Timeout after which inactive files get closed (0 = disable automatic closing of idle files)-》如果间隔n秒没有文件操作，就关闭文件
+
+hdfs.batchSize 	100 	number of events written to file before it is flushed to HDFS -》批量写的大小
+hdfs.codeC 	– 	Compression codec. one of following : gzip, bzip2, lzo, lzop, snappy  -》文件存储格式-》压缩文件-》对文件是否进行压缩，以什么形式进行压缩-》列式存储可以节省空间
+hdfs.fileType 	SequenceFile 	File format: currently SequenceFile, DataStream or CompressedStream
+                                            (1)DataStream will not compress output file and please don’t set codeC
+                                            (2)CompressedStream requires set hdfs.codeC with an available codeC
+hdfs.maxOpenFiles 	5000 	Allow only this number of open files. If this number is exceeded, the oldest file is closed.
+hdfs.minBlockReplicas 	– 	Specify minimum number of replicas per HDFS block. If not specified, it comes from the default Hadoop config in the classpath.
+hdfs.writeFormat 	Writable 	Format for sequence file records. One of Text or Writable. Set to Text before creating data files with Flume, otherwise those files cannot be read by either Apache Impala (incubating) or Apache Hive.
+
+hdfs.callTimeout 	10000 	Number of milliseconds allowed for HDFS operations, such as open, write, flush, close. This number should be increased if many HDFS timeout operations are occurring.
+        -》hdfs操作的允许时间
+
+hdfs.threadsPoolSize 	10 	Number of threads per HDFS sink for HDFS IO ops (open, write, etc.)
+hdfs.rollTimerPoolSize 	1 	Number of threads per HDFS sink for scheduling timed file rolling
+
+-》权限验证-》暂不考虑
+hdfs.kerberosPrincipal 	– 	Kerberos user principal for accessing secure HDFS
+hdfs.kerberosKeytab 	– 	Kerberos keytab for accessing secure HDFS
+
+hdfs.proxyUser
+
+
+hdfs.round 	false 	Should the timestamp be rounded down (if true, affects all time based escape sequences except %t)
+hdfs.roundValue 	1 	Rounded down to the highest multiple of this (in the unit configured using hdfs.roundUnit), less than current time.
+hdfs.roundUnit 	second 	The unit of the round down value - second, minute or hour.
+
+
+hdfs.timeZone 	Local Time 	Name of the timezone that should be used for resolving the directory path, e.g. America/Los_Angeles.
+
+-》使用本地时间
+hdfs.useLocalTimeStamp 	false 	Use the local time (instead of the timestamp from the event header) while replacing the escape sequences.
+
+
+hdfs.closeTries 	0 	Number of times the sink must try renaming a file, after initiating a close attempt. If set to 1, this sink will not re-try a failed rename (due to, for example, NameNode or DataNode failure), and may leave the file in an open state with a .tmp extension. If set to 0, the sink will try to rename the file until the file is eventually renamed (there is no limit on the number of times it would try). The file may still remain open if the close call fails but the data will be intact and in this case, the file will be closed only after a Flume restart.
+hdfs.retryInterval 	180 	Time in seconds between consecutive attempts to close a file. Each close call costs multiple RPC round-trips to the Namenode, so setting this too low can cause a lot of load on the name node. If set to 0 or less, the sink will not attempt to close the file if the first attempt fails, and may leave the file open or with a ”.tmp” extension.
+serializer 	TEXT 	Other possible options include avro_event or the fully-qualified class name of an implementation of the EventSerializer.Builder interface.
+serializer.*
