@@ -1,0 +1,33 @@
+准备工作：
+	jdk，防火墙关闭，网络
+时间同步：
+	ntp时间服务器
+	安装 yum install -y ntp
+	ntpdate ntp1.aliyun.com
+ssh免秘钥登录
+	ssh-keygen:生成秘钥文件
+	ssh-copy-id -i hadoop01:向文件追加公钥
+hdfs
+	启动hdfs
+hbase安装
+	1、解压安装
+	2、修改配置
+		hbase-env.sh(java_home,hbase_manger_zk=false)
+		hbase-site.xml(hdfs路径，zk集群，是否是分布式)
+		regionservers
+		backup-masters
+		    -》备份-》备用Hmaster
+		拷贝hdfs-site.xml到hbase/conf
+	3、分到到其他节点
+	4、启动
+		start-hbase.sh
+	5、客户端访问
+		hbase shell
+	
+	
+	
+	
+	
+	
+   
+   
