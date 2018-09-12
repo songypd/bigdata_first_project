@@ -67,7 +67,7 @@ public class HbaseDemo_001 {
         }
     }
 
-    //批量插入
+    //批量插入   put(List<Put> puts)
     //查询内容
     @Test
     public void get() throws Exception {
@@ -92,6 +92,7 @@ public class HbaseDemo_001 {
             System.err.println(new String(CellUtil.cloneValue(e.getColumnLatestCell("cf".getBytes(),"name".getBytes()))));
             System.err.println(new String(CellUtil.cloneValue(e.getColumnLatestCell("cf".getBytes(),"age".getBytes()))));
         });
+        scanner.close();
         System.out.println("==========================================================");
     }
 
@@ -117,5 +118,6 @@ public class HbaseDemo_001 {
         if (hTable != null) {
             hTable.close();
         }
+
     }
 }
