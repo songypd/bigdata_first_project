@@ -1,4 +1,4 @@
-package com.bigdata.nginx;
+package com.bigdata.nginx.request;
 
 import java.io.BufferedReader;
 import java.io.IOException;

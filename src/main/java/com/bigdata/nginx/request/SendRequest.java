@@ -1,4 +1,4 @@
-package com.bigdata.nginx;
+package com.bigdata.nginx.request;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CyclicBarrier;
 
 /**
  * @author yuanpeng.song
@@ -15,15 +16,30 @@ import java.util.List;
 public class SendRequest {
 
     public static void main(String[] args) throws Exception {
+
+        CyclicBarrier thread = new CyclicBarrier(5);
         //发送 GET 请求
         String url = "http://node05:80/test.log";
-        int num = 0;
         List<String> params = getParams();
         params.forEach(e -> {
-            String s = HttpRequest.sendGet(url, e.toString());
-            System.err.println(e.toString());
+            new Thread(){
+                public void run(){
+                    try {
+                        Thread.sleep(1000);
+                        System.out.println("==========================================================");
+                        System.out.println("===========线程为======"+Thread.currentThread().getId()+"=======================================");
+                        System.out.println("==========================================================");
+                        String s = HttpRequest.sendGet(url, e.toString());
+                        System.err.println(e.toString());
+//                        cb.await();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
         });
-        num++;
+
+
 
         //发送 POST 请求
 //        String sr=HttpRequest.sendPost("http://localhost:8080/Home/RequestPostString", "key=123&v=456");
