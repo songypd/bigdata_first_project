@@ -14,8 +14,8 @@ import org.junit.Test;
  */
 public class HbaseDemo_001 {
     HBaseAdmin admin = null;
-    String tablename = "test";
-    String columnFamily = "test_001";
+    String tablename = "log";
+    String columnFamily = "cf";
     HTable hTable = null;
 
     //初始化admin
@@ -79,18 +79,33 @@ public class HbaseDemo_001 {
 //        System.err.println(new String(CellUtil.cloneValue(cell.g)));
     }
 
+    @Test
+    public void scan_001() throws Exception{
+        Scan scan = new Scan();
+        scan.setStartRow(String.valueOf(1).getBytes());
+        scan.setStopRow(String.valueOf(90).getBytes());
+        ResultScanner scanner = hTable.getScanner(scan);
+        System.out.println("==========================================================");
+        scanner.forEach(e->{
+            System.err.print(new String(CellUtil.cloneValue(e.getColumnLatestCell("cf".getBytes(), "average".getBytes())))+"+++");
+            System.err.print(new String(CellUtil.cloneValue(e.getColumnLatestCell("cf".getBytes(), "count".getBytes())))+"+++++");
+            System.err.print(new String(e.getRow()));
+            System.err.println("");
+        });
+    }
 
     //批量查询
     @Test
-    public void scan() throws Exception{
+    public void scan() throws Exception {
         Scan scan = new Scan();
         scan.setStartRow(String.valueOf(1).getBytes());
         scan.setStopRow(String.valueOf(20).getBytes());
         ResultScanner scanner = hTable.getScanner(scan);
         System.out.println("==========================================================");
-        scanner.forEach(e->{
-            System.err.println(new String(CellUtil.cloneValue(e.getColumnLatestCell("cf".getBytes(),"name".getBytes()))));
-            System.err.println(new String(CellUtil.cloneValue(e.getColumnLatestCell("cf".getBytes(),"age".getBytes()))));
+        scanner.forEach(e -> {
+            System.err.println(new String(CellUtil.cloneValue(e.getColumnLatestCell("cf".getBytes(), "name".getBytes()))));
+            System.err.println(new String(CellUtil.cloneValue(e.getColumnLatestCell("cf".getBytes(), "age".getBytes()))));
+            System.err.println(new String(e.getRow()));
         });
         scanner.close();
         System.out.println("==========================================================");
@@ -100,10 +115,9 @@ public class HbaseDemo_001 {
     //首先disable，然后在执行drop
     @Test
     public void drop() throws Exception {
+        tablename = "log";
         if (admin.tableExists(TableName.valueOf(tablename))) {
-            if (admin.isTableAvailable(tablename)) {
-                admin.disableTable(tablename);
-            }
+//            admin.disableTable(tablename);
             admin.deleteTable(tablename);
 
         }
