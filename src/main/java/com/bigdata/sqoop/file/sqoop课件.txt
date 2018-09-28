@@ -1,5 +1,5 @@
 ﻿sqoop：
-导入：
+导入：hdfs
 
 import
 --connect
@@ -23,7 +23,7 @@ psn
 sqoop --options-file sqoop1
 
 *************************************************
-导入：
+导入：hive
 
 import
 --connect

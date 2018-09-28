@@ -45,6 +45,11 @@ mysql驱动包
 修改配置文件
 修改jline这个包
 
+    读时检查
+    写时检查
+
+    优化效率
+
 
 Hive_Sql
 
@@ -116,7 +121,7 @@ Hive删除分区语法：
 
 Hive向指定分区添加数据语法：
 
-    LOAD DATA [LOCAL] INPATH 'filepath' [OVERWRITE] INTO TABLE tablename [PARTITION (partcol1=val1, partcol2=val2 ...)]
+    LOAD DATA [LOCAL] INPATH 'filepath' [OVERWRITE] INTO TABLE tablename [PARITION (partcol1=val1, partcol2=val2 ...)]
 
     例：
     LOAD DATA INPATH '/user/pv.txt' INTO TABLE day_hour_table PARTITION(dt='2008-08- 08', hour='08');
@@ -236,6 +241,64 @@ TABLESAMPLE(BUCKET 3 OUT OF 256)，抽取哪些数据？
 往分桶表中加载数据
     insert into table bucket_table select columns from tbl;
     insert overwrite table bucket_table select columns from tbl;
+
+Hive Lateral View
+    hive Lateral View
+    Lateral View用于和UDTF函数（explode、split）结合来使用。
+    首先通过UDTF函数拆分成多行，再将多行结果组合成一个支持别名的虚拟表。
+    主要解决在select使用UDTF做查询过程中，查询只能包含单个UDTF，不能包含其他字段、以及多个UDTF的问题
+
+    语法：
+    LATERAL VIEW udtf(expression) tableAlias AS columnAlias (',' columnAlias)
+
+    select count(distinct(myCol1)), count(distinct(myCol2)) from psn2
+    LATERAL VIEW explode(likes) myTable1 AS myCol1
+    LATERAL VIEW explode(address) myTable2 AS myCol2, myCol3
+
+
+Hive 视图
+    hive View视图
+    和关系型数据库中的普通视图一样，hive也支持视图
+    特点：
+    不支持物化视图
+    只能查询，不能做加载数据操作
+    视图的创建，只是保存一份元数据，查询视图时才执行对应的子查询
+    view定义中若包含了ORDER BY/LIMIT语句，当查询视图时也进行ORDER BY/LIMIT语句操作，view当中定义的优先级更高
+    view支持迭代视图
+
+    View语法
+    创建视图：
+    CREATE VIEW [IF NOT EXISTS] [db_name.]view_name
+      [(column_name [COMMENT column_comment], ...) ]
+      [COMMENT view_comment]
+      [TBLPROPERTIES (property_name = property_value, ...)]
+      AS SELECT ... ;
+    查询视图：
+    select colums from view;
+    删除视图：
+    DROP VIEW [IF EXISTS] [db_name.]view_name;
+
+
+hive索引
+    目的：优化查询以及检索性能
+    创建索引：
+    create index t1_index on table psn2(name)
+    as 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler' with deferred rebuild
+    in table t1_index_table;
+    as：指定索引器；
+    in table：指定索引表，若不指定默认生成在default__psn2_t1_index__表中
+
+    create index t1_index on table psn2(name)
+    as 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler' with deferred rebuild;
+
+    查询索引
+    show index on psn2;
+
+    重建索引（建立索引之后必须重建索引才能生效）
+    ALTER INDEX t1_index ON psn2 REBUILD;
+
+    删除索引
+    DROP INDEX IF EXISTS t1_index ON psn2;
 
 
 

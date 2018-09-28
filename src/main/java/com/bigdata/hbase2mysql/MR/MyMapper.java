@@ -1,5 +1,6 @@
 package com.bigdata.hbase2mysql.MR;
 
+import com.bigdata.common.ConstantEnums;
 import com.bigdata.hbase2mysql.model.BeikeResBj;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.CellUtil;
@@ -19,8 +20,8 @@ public class MyMapper extends TableMapper<BeikeResBj, BeikeResBj> {
     protected void map(ImmutableBytesWritable key, Result value, Context context) throws IOException, InterruptedException {
         BeikeResBj model = new BeikeResBj();
         int code = Integer.parseInt((new String(value.getRow(), "UTF-8")));
-//        model.setAddress(ConstantEnums.getByCode(code).getContent());
-        model.setAddress(code+"");
+        model.setAddress(ConstantEnums.getByCode(code).toString());
+//        model.setAddress(code+"");
         int count = 0;
         for (Cell cell : value.listCells()) {
             String colValue = new String(CellUtil.cloneValue(cell), "UTF-8");
