@@ -54,13 +54,13 @@ public class TestHdfs {
     @Test
     public void download() throws IOException{
         //文件下载
-        File file = new File("D:/test/data/test.pptx");
+        File file = new File("D:/test/data/wc.txt");
         if (!file.exists()){
             file.getParentFile().mkdirs();
             file.createNewFile();
         }
         FileOutputStream fo = new FileOutputStream(file);
-        Path p = new Path("/data/test");
+        Path p = new Path("/data/wordWC.txt");
         FSDataInputStream stream = fs.open(p);
         IOUtils.copyBytes(stream,fo,conf);
     }

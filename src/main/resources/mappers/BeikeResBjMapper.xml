@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bigdata.hbase2mysql.dao.BeikeResBjMapper">
+  <resultMap id="BaseResultMap" type="com.bigdata.hbase2mysql.model.BeikeResBj">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="average_price" jdbcType="DECIMAL" property="averagePrice" />
+    <result column="total_count" jdbcType="VARCHAR" property="totalCount" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, address, average_price, total_count
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from beike_res_bj
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from beike_res_bj
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bigdata.hbase2mysql.model.BeikeResBj">
+    insert into beike_res_bj (id, address, average_price, 
+      total_count)
+    values (#{id,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{averagePrice,jdbcType=DECIMAL}, 
+      #{totalCount,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bigdata.hbase2mysql.model.BeikeResBj">
+    insert into beike_res_bj
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="averagePrice != null">
+        average_price,
+      </if>
+      <if test="totalCount != null">
+        total_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="averagePrice != null">
+        #{averagePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="totalCount != null">
+        #{totalCount,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bigdata.hbase2mysql.model.BeikeResBj">
+    update beike_res_bj
+    <set>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="averagePrice != null">
+        average_price = #{averagePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="totalCount != null">
+        total_count = #{totalCount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bigdata.hbase2mysql.model.BeikeResBj">
+    update beike_res_bj
+    set address = #{address,jdbcType=VARCHAR},
+      average_price = #{averagePrice,jdbcType=DECIMAL},
+      total_count = #{totalCount,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <sql id="insert_List">
+    address, average_price, total_count
+  </sql>
+  <insert id="bathInsert">
+    insert into beike_res_bj
+    (
+    <include refid="insert_List"/>
+    )
+    VALUES
+    <foreach collection="list" item="i" separator="," index="index">
+      (
+      #{i.address,jdbcType=VARCHAR}, #{i.averagePrice,jdbcType=DECIMAL},
+      #{i.totalCount,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+</mapper>
